@@ -169,7 +169,6 @@ async def chat_endpoint(chat: ChatRequest, db: Session = Depends(get_db)):
         # 1. 정책 관련 질문인지 분류 - API 호출 대신 직접 함수 호출
         print(f"정책 분류 함수 호출 시작: {chat.message}")
         
-        # 내부 API 호출 대신 직접 함수 호출
         is_policy_question = classify_policy_question(chat.message)
             
         print(f"질문 분류 결과: {'정책 관련' if is_policy_question else '일반 질문'}")

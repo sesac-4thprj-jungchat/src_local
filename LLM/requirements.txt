@@ -113,3 +113,4 @@ pandas
 faiss-cpu
 mysql-connector-python
 sqlalchemy
+tiktoken

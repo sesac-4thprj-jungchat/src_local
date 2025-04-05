@@ -26,7 +26,7 @@ class ChatSessionCreate(BaseModel):
 class ChatRequest(BaseModel):
     message: str
     session_id: str | None = None  # 선택적 세션 ID 추가
-    model: str = "gpt"  # 모델 선택 
+    model: str = "openchat"  # 모델 선택 
 
 
 class ChatResponse(BaseModel):

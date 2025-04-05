@@ -14,7 +14,7 @@ from langchain.prompts import PromptTemplate
 from langchain_community.vectorstores import FAISS
 from user_data import combine_user_data, fill_area_by_district
 from openai import AsyncOpenAI
-from config import MAX_SQL_ATTEMPTS, OPENAI_API_KEY, OPENAI_MODEL, SQL_TEMPERATURE
+from config import MAX_SQL_ATTEMPTS, OPENAI_API_KEY, OPENAI_MODEL, SQL_TEMPERATURE, MISTRAL_VLLM
 from database import (
     get_user_data, 
     execute_sql_query, 
@@ -267,7 +267,7 @@ def reconstruct_sql_from_question(question: str) -> str:
 
 # LLM 호출 함수 개선
 async def call_llm_for_sql(prompt_text: str, max_tokens: int = 3072, timeout: int = 30) -> Optional[str]:
-    """OpenAI GPT-4o API를 호출하여 SQL 쿼리 생성 - 타임아웃 및 재시도 로직 강화
+    """LLM API를 호출하여 SQL 쿼리 생성 - 타임아웃 및 재시도 로직 강화
     
     Args:
         prompt_text: SQL 생성을 위한 프롬프트 
@@ -288,29 +288,33 @@ async def call_llm_for_sql(prompt_text: str, max_tokens: int = 3072, timeout: in
     print(f"SQL 생성 프롬프트 준비 완료 (사용자 정보 포함: {has_user_info})")
     
     try:
-        # OpenAI 클라이언트 초기화
-        client = AsyncOpenAI(api_key=OPENAI_API_KEY, timeout=timeout)
+        data = {
+            "prompt": simplified_prompt,
+            "max_tokens": max_tokens, 
+            "stop": ["</SQL>"],
+            "temperature": 0.3  # 더 결정적인 응답을 위해 온도 낮춤
+        }
         
-        # API 호출 - chat.completions 사용
-        response = await client.chat.completions.create(
-            model=OPENAI_MODEL,
-            messages=[
-                {"role": "system", "content": "당신은 한국어 자연어 질문을 SQL 쿼리로 변환하는 전문가입니다. 반드시 <SQL>태그 안에 SQL 쿼리를 작성해주세요. 데이터베이스 스키마를 정확히 따르고 유효한 SQL 쿼리만 생성하세요."},
-                {"role": "user", "content": simplified_prompt}
-            ],
-            max_tokens=max_tokens,
-            temperature=SQL_TEMPERATURE,
-            stop=["</SQL>"]
+        # 짧은 타임아웃으로 시도
+        response = requests.post(
+            url=MISTRAL_VLLM, 
+            headers={"Content-Type": "application/json"},
+            json=data,
+            timeout=timeout
         )
+        response.raise_for_status()
         
-        # 응답 처리
-        if response.choices and len(response.choices) > 0:
-            content = response.choices[0].message.content
+        result = response.json()
+        
+        if 'text' in result and result['text'] and isinstance(result['text'], list):
+            content = result['text'][0]
             print(f"LLM 응답 받음 (길이: {len(content)}자)")
             return content
         
+    except requests.exceptions.RequestException as e:
+        print(f"LLM API 호출 오류: {e}")
     except Exception as e:
-        print(f"OpenAI API 호출 오류: {e}")
+        print(f"LLM 처리 중 예외 발생: {e}")
         
     return None
 
