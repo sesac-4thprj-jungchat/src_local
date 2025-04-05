@@ -13,8 +13,7 @@ from langchain.schema import Document
 from langchain.prompts import PromptTemplate
 from langchain_community.vectorstores import FAISS
 from user_data import combine_user_data, fill_area_by_district
-from openai import AsyncOpenAI
-from config import MAX_SQL_ATTEMPTS, OPENAI_API_KEY, OPENAI_MODEL, SQL_TEMPERATURE, MISTRAL_VLLM
+from config import MAX_SQL_ATTEMPTS, MISTRAL_VLLM
 from database import (
     get_user_data, 
     execute_sql_query, 
