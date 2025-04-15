@@ -1,61 +1,38 @@
-<<<<<<< HEAD
-# front
-=======
-# final_project
->>>>>>> 18e86af ("feat 회원가입 창 메인 화면창, 마이페이지 구현2")
+# Fundit
+펀딧은 다양한 보조금 정보를 한 곳에 모아 사용자에게 제공하고,
 
-# Fundit_2.1 프로젝트
+보조금 신청 과정을 간소화하여 빠르고 쉽게 지원을 받을 수 있도록
+필요한 도움을 실시간으로 제공합니다. 
 
-## 프로젝트 압축 및 재구성 방법
+![image](https://github.com/user-attachments/assets/56ee5772-8d1b-4e1d-b08d-a1d97967b4fd)
 
-프로젝트를 압축할 때는 OpenChat 모델과 가상환경을 제외하여 용량을 크게 줄일 수 있습니다. 
+![image](https://github.com/user-attachments/assets/e3b6abeb-0fae-4d3b-9988-eda0de04593b)
 
-### 프로젝트 압축
+## 회원가입 / 로그인
+![auth](https://github.com/user-attachments/assets/afabecd4-4a73-477f-809e-564d4ea6af7e)
 
-1. 제공된 `compress_project.sh` 스크립트를 실행합니다:
-```bash
-./compress_project.sh
-```
+## 진입화면
+![info](https://github.com/user-attachments/assets/cde6eb64-af5c-46e4-98f7-7c02ba3771bd)
 
-이 스크립트는 다음 항목들을 제외하고 압축합니다:
-- LLM 모델 파일 (*.gguf)
-- OpenChat 관련 모델 파일
-- 가상환경 디렉토리 (.llm_env)
-- 캐시 파일 (__pycache__)
-- 로그 파일 및 디렉토리
 
-### 프로젝트 재구성
+## 채팅화면
+![chatting](https://github.com/user-attachments/assets/74b048aa-f866-4c0d-bfe6-d76ddff98671)
 
-압축 해제 후 프로젝트를 실행하려면 다음 단계를 따르세요:
 
-1. 압축 파일 해제:
-```bash
-tar -xzf Fundit_2.1_YYYYMMDD.tar.gz
-```
 
-2. OpenChat 모델 다운로드 (필요한 경우):
-```bash
-cd Fundit_2.1/LLM
-wget https://huggingface.co/TheBloke/OpenChat-3.5-7B-Mixtral-v2.0-GGUF/resolve/main/openchat-3.5-7b-mixtral-v2.0.i1-q4_k_m.gguf -O OpenChat-3.5-7B-Mixtral-v2.0.i1-Q4_K_M.gguf
-```
+### repo
+📁 appendix - EDA, prompt
 
-3. 가상환경 설정:
-```bash
-cd Fundit_2.1
-python -m venv .llm_env
-source .llm_env/bin/activate
-pip install -r requirements.txt  # requirements.txt가 있는 경우
-```
+📁 local - web(react, fastapi)
 
-4. 서비스 실행:
-```bash
-cd LLM
-./run_llm_service.sh  # GPU 모드 (기본값)
-# 또는
-./run_llm_service.sh --cpu  # CPU 모드
-```
+📁 src_aws_eks_iac_cicd
 
-# ‼️💡 Commit Convention
+📁 retrival_test - rag 성능 test
+
+### team
+![SeSAC_final_project](https://github.com/user-attachments/assets/415c0144-fb58-42b2-a208-909f3dac5ae9)
+
+#### ‼️💡 Commit Convention
 `Feat`	새로운 기능을 추가
 
 `Fix`	버그 수정
@@ -81,3 +58,4 @@ cd LLM
 `Rename`	파일 혹은 폴더명을 수정하거나 옮기는 작업만인 경우
 
 `Remove`	파일을 삭제하는 작업만 수행한 경우
+
